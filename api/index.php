@@ -23,6 +23,12 @@ require_once 'crud_functions.php';
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
+    case 'OPTIONS':
+        // Define os cabeçalhos CORS permitidos para a solicitação
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Access-Control-Allow-Headers: Content-Type");
+        exit();
+    
     case 'GET':
         // Consulta para obter todos os dados da tabela
         $data = getAllFuncionarios($conn);
@@ -90,4 +96,3 @@ switch ($method) {
 
 // Fecha a conexão com o banco de dados
 $conn->close();
-?>

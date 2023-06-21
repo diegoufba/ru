@@ -1,5 +1,4 @@
-// import * as React from 'react';
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -19,8 +18,6 @@ import {
     randomTraderName,
     randomId,
 } from '@mui/x-data-grid-generator';
-
-
 
 const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {
@@ -88,22 +85,6 @@ function EditToolbar(props) {
 }
 
 export default function FullFeaturedCrudGrid() {
-
-    const [data, setData] = useState([]);
-
-    useEffect(() => { fetchData(); }, []);
-
-    const fetchData = async () => {
-        try {
-            const response = await fetch('http://localhost/ru/api/');
-            const jsonData = await response.json();
-            setData(jsonData);
-            console.log(jsonData)
-        } catch (error) {
-            console.error('Erro ao buscar dados:', error);
-        }
-    };
-
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState({});
 
@@ -181,7 +162,7 @@ export default function FullFeaturedCrudGrid() {
             cellClassName: 'actions',
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
+                console.log(isInEditMode)
                 if (isInEditMode) {
                     return [
                         <GridActionsCellItem
@@ -252,19 +233,3 @@ export default function FullFeaturedCrudGrid() {
         </Box>
     );
 }
-
-
-
-
-
-    // return (
-    //     <div>
-    //         <h1>Dados da tabela Usuários</h1>
-    //         <ul>
-    //             {data.map((item) => (
-    //                 <li key={item.id}>{item.nome}</li>
-    //             ))}
-    //         </ul>
-    //     </div>
-    // );
-
