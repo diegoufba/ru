@@ -19,11 +19,19 @@ import {
 
 
 function EditToolbar(props) {
-    const { setRows, setRowModesModel } = props;
+    // const { setRows, setRowModesModel } = props;
+    // const columnNames = ['cpf', 'nome', 'salario']
+    const { setRows, setRowModesModel, columnNames } = props;
 
     const handleClick = () => {
         const id = randomId();
-        setRows((oldRows) => [...oldRows, { id, cpf: '', nome: '', salario: '', isNew: true }]);
+        const newRow = columnNames.reduce((acc, columnName) => {
+            acc[columnName] = '';
+            return acc;
+        }, { id, isNew: true });
+
+        setRows((oldRows) => [...oldRows, newRow]);
+        // setRows((oldRows) => [...oldRows, { id, cpf: '', nome: '', salario: '', isNew: true }]);
         setRowModesModel((oldModel) => ({
             ...oldModel,
             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
@@ -33,16 +41,17 @@ function EditToolbar(props) {
     return (
         <GridToolbarContainer>
             <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-                Adicionar Funcionario
+                Adicionar
             </Button>
         </GridToolbarContainer>
     );
 }
 
-export default function FullFeaturedCrudGrid() {
-    const apiPath = 'http://localhost/ru/api/'
-    const columnNames = ['cpf', 'nome', 'salario']
-    const primaryKey = 'cpf'
+export default function Table(props) {
+    // const columnNames = ['cpf', 'nome', 'salario']
+    const apiPath = props.apiPath
+    const columnNames = props.columnNames
+    const primaryKey = props.primaryKey
 
     const [rows, setRows] = useState([]);
 
@@ -55,7 +64,7 @@ export default function FullFeaturedCrudGrid() {
     columns.push({
         field: 'actions',
         type: 'actions',
-        headerName: 'Actions',
+        headerName: 'Ações',
         width: 100,
         cellClassName: 'actions',
         getActions: ({ id }) => {
@@ -101,7 +110,6 @@ export default function FullFeaturedCrudGrid() {
     const [rowModesModel, setRowModesModel] = useState({});
 
     useEffect(() => { fetchData(apiPath, primaryKey); }, [])
-    // useEffect(() => { console.log(rowModesModel); }, [rowModesModel])
 
     const fetchData = async (apiPath, primaryKey) => {
         try {
@@ -161,7 +169,7 @@ export default function FullFeaturedCrudGrid() {
         }
 
         // const apiUrl = id ? `${apiPath}${id}` : apiPath;
-        const apiUrl = id ? `${apiPath}?cpf=${id}` : apiPath;
+        const apiUrl = id ? `${apiPath}?${primaryKey}=${id}` : apiPath;
 
         fetch(apiUrl, {
             method: method,
@@ -189,7 +197,7 @@ export default function FullFeaturedCrudGrid() {
         const method = newRow.isNew ? 'POST' : 'PUT'
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        saveOnDatabase(updatedRow,method)
+        saveOnDatabase(updatedRow, method)
 
         return updatedRow;
     };
@@ -197,10 +205,6 @@ export default function FullFeaturedCrudGrid() {
     const handleRowModesModelChange = (newRowModesModel) => {
         setRowModesModel(newRowModesModel);
     };
-
-    function test() {
-        console.log(rows)
-    }
 
     return (
         <Box
@@ -215,7 +219,6 @@ export default function FullFeaturedCrudGrid() {
                 },
             }}
         >
-            <Button onClick={test} variant="contained">Contained</Button>
             <DataGrid
                 rows={rows}
                 columns={columns}
@@ -228,7 +231,7 @@ export default function FullFeaturedCrudGrid() {
                     toolbar: EditToolbar,
                 }}
                 slotProps={{
-                    toolbar: { setRows, setRowModesModel },
+                    toolbar: { setRows, setRowModesModel,columnNames },
                 }}
             />
         </Box>
