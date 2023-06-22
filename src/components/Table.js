@@ -6,6 +6,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import {
     GridRowModes,
     DataGrid,
@@ -34,7 +36,7 @@ function EditToolbar(props) {
         // setRows((oldRows) => [...oldRows, { id, cpf: '', nome: '', salario: '', isNew: true }]);
         setRowModesModel((oldModel) => ({
             ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+            [id]: { mode: GridRowModes.Edit, fieldToFocus: columnNames[0] },
         }));
     };
 
@@ -54,12 +56,15 @@ export default function Table(props) {
     const primaryKey = props.primaryKey
 
     const [rows, setRows] = useState([]);
+    const [snackbar, setSnackbar] = useState(null);
+    const handleCloseSnackbar = () => setSnackbar(null);
 
     const columns = columnNames.map(name => ({
         field: name,
         headerName: name,
         width: 150,
-        editable: true,
+        editable: true
+        // editable: name === primaryKey ? false: true,
     }))
     columns.push({
         field: 'actions',
@@ -160,7 +165,7 @@ export default function Table(props) {
         }
     };
 
-    function saveOnDatabase(updatedRow, method, id) {
+    async function saveOnDatabase(updatedRow, method, id) {
         const row = {}
         if (method !== 'DELETE') {
             columnNames.map((columnName) => {
@@ -170,8 +175,9 @@ export default function Table(props) {
 
         // const apiUrl = id ? `${apiPath}${id}` : apiPath;
         const apiUrl = id ? `${apiPath}?${primaryKey}=${id}` : apiPath;
+        let result = [false,""]
 
-        fetch(apiUrl, {
+        await fetch(apiUrl, {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
@@ -180,27 +186,33 @@ export default function Table(props) {
         })
             .then(response => {
                 if (response.ok) {
-                    console.log(`Requisição ${method} bem-sucedida`);
-                    // Lógica adicional aqui, se necessário
+                    result = [true,`Requisição ${method} bem-sucedida`]
+                    // console.log(`Requisição ${method} bem-sucedida`);
                 } else {
-                    console.error(`Erro na requisição ${method}`);
-                    // Tratar o erro aqui, se necessário
+                    result = [false,`Erro na requisição ${method}`]
+                    // console.error(`Erro na requisição ${method}`);
                 }
             })
-            .catch(error => {
-                console.error(`Erro na requisição ${method}`, error);
-                // Tratar o erro aqui, se necessário
-            });
+        return result
     }
 
-    const processRowUpdate = (newRow) => {
+    const processRowUpdate = async (newRow) => {
         const method = newRow.isNew ? 'POST' : 'PUT'
-        const updatedRow = { ...newRow, isNew: false };
-        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        saveOnDatabase(updatedRow, method)
-
-        return updatedRow;
+        const [sucess,message] = await saveOnDatabase(newRow, method)
+        if (sucess) {
+            const updatedRow = { ...newRow, isNew: false };
+            setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+            setSnackbar({ children: message, severity: 'success' });
+            return updatedRow;
+        }
+        else {
+            setSnackbar({ children: message, severity: 'error' });
+            return false;
+        }
     };
+
+    const handleProcessRowUpdateError = (error) => {
+    }
 
     const handleRowModesModelChange = (newRowModesModel) => {
         setRowModesModel(newRowModesModel);
@@ -227,13 +239,24 @@ export default function Table(props) {
                 onRowModesModelChange={handleRowModesModelChange}
                 onRowEditStop={handleRowEditStop}
                 processRowUpdate={processRowUpdate}
+                onProcessRowUpdateError={handleProcessRowUpdateError}
                 slots={{
                     toolbar: EditToolbar,
                 }}
                 slotProps={{
-                    toolbar: { setRows, setRowModesModel,columnNames },
+                    toolbar: { setRows, setRowModesModel, columnNames },
                 }}
             />
+            {!!snackbar && (
+                <Snackbar
+                    open
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                    onClose={handleCloseSnackbar}
+                    autoHideDuration={2000}
+                >
+                    <Alert {...snackbar} onClose={handleCloseSnackbar} />
+                </Snackbar>
+            )}
         </Box>
     );
 }
