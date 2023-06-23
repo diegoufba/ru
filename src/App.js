@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Funcionario from './pages/Funcionario';
 import Estudante from './pages/Estudante';
 import Docente from './pages/Docente';
+import './App.css'
 import Teste from './pages/teste';
 // import Test from './pages/test';
 

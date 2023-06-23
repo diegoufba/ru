@@ -8,6 +8,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+
 import {
     GridRowModes,
     DataGrid,
@@ -18,7 +19,6 @@ import {
 import {
     randomId,
 } from '@mui/x-data-grid-generator';
-
 
 function EditToolbar(props) {
     const { setRows, setRowModesModel, columnNames } = props;
@@ -64,7 +64,7 @@ export default function Table(props) {
             width: 150,
             editable: true,
             type: 'singleSelect',
-            valueOptions: opcoes[name]
+            valueOptions: opcoes[name],
           };
         } else {
           return {
@@ -107,14 +107,14 @@ export default function Table(props) {
 
             return [
                 <GridActionsCellItem
-                    icon={<EditIcon />}
+                    icon={<EditIcon color='success' />}
                     label="Edit"
                     className="textPrimary"
                     onClick={handleEditClick(id)}
                     color="inherit"
                 />,
                 <GridActionsCellItem
-                    icon={<DeleteIcon />}
+                    icon={<DeleteIcon color='error'/>}
                     label="Delete"
                     onClick={handleDeleteClick(id)}
                     color="inherit"
@@ -187,7 +187,7 @@ export default function Table(props) {
             })
         }
 
-        const apiUrl = id ? `${apiPath}?${primaryKey}=${id}` : apiPath;
+        const apiUrl = id ? `${apiPath}?id=${id}` : apiPath;
         let result = [false, ""]
 
         await fetch(apiUrl, {
@@ -243,6 +243,12 @@ export default function Table(props) {
             }}
         >
             <DataGrid
+              sx={{
+                '.MuiDataGrid-columnHeaderTitle': { 
+                   fontWeight: 'bold !important',
+                },
+                backgroundColor:'white'
+              }}
                 rows={rows}
                 columns={columns}
                 editMode="row"

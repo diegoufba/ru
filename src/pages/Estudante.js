@@ -20,7 +20,7 @@ export default function Estudante() {
         <Container maxWidth="xl" sx={{ display: 'flex' }}>
             <Menu />
             <Box sx={{ p: 1 }}>
-                <Typography variant="h4" gutterBottom>
+                <Typography color="primary" variant="h4" gutterBottom>
                     Estudante
                 </Typography>
                 {/* <Table columnNames={columnNames} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} /> */}

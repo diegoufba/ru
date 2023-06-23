@@ -20,7 +20,7 @@ export default function Funcionario() {
         <Container maxWidth="xl" sx={{ display: 'flex' }}>
             <Menu />
             <Box sx={{ p: 1 }}>
-                <Typography variant="h4" gutterBottom>
+                <Typography color="primary" variant="h4" gutterBottom>
                     Funcionário
                 </Typography>
                 <Box sx={{ boxShadow: 3 }}>

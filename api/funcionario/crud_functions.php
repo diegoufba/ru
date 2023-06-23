@@ -1,6 +1,6 @@
 <?php
 // Função para obter todos os funcionários
-function getAllFuncionarios($conn)
+function getAll($conn)
 {
     $sql = "SELECT Funcionario.*, Cargo.*
     FROM Funcionario
@@ -21,7 +21,7 @@ function getAllFuncionarios($conn)
 }
 
 // Função para inserir um novo funcionário
-function insertFuncionario($conn, $requestData)
+function insert($conn, $requestData)
 {
     $cpf = $requestData['cpf'];
     $nome = $requestData['nome'];
@@ -40,7 +40,7 @@ function insertFuncionario($conn, $requestData)
 }
 
 // Função para atualizar um funcionário existente
-function updateFuncionario($conn, $requestData)
+function update($conn, $requestData)
 {
     $cpf = $requestData['cpf'];
     $nome = $requestData['nome'];
@@ -60,12 +60,12 @@ function updateFuncionario($conn, $requestData)
 
 
 // Função para excluir um funcionário
-function deleteFuncionario($conn, $cpf)
+function delete($conn, $id)
 {
-    $sqlCargo = "DELETE FROM Cargo WHERE cpf = '$cpf'";
+    $sqlCargo = "DELETE FROM Cargo WHERE cpf = '$id'";
     $resultCargo = $conn->query($sqlCargo);
 
-    $sqlFuncionario = "DELETE FROM Funcionario WHERE cpf = '$cpf'";
+    $sqlFuncionario = "DELETE FROM Funcionario WHERE cpf = '$id'";
     $resultFuncionario = $conn->query($sqlFuncionario);
 
     return ($resultFuncionario && $resultCargo);

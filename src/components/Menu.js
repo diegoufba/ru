@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -14,6 +14,7 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 
 
 export default function Menu() {
+    const location = useLocation()
     const drawerWidth = 240;
     const list = [
         { text: 'Funcionário', icon: <GroupsIcon />, path: '/' },
@@ -29,18 +30,23 @@ export default function Menu() {
                 '& .MuiDrawer-paper': {
                     width: drawerWidth,
                     boxSizing: 'border-box',
-                    position:'relative',
-                    borderRight: 'none'
+                    position: 'relative',
+                    borderRight: 'none',
+                    backgroundColor:'#F0F2F5;'
                 },
             }}
             variant="permanent"
             anchor="left"
         >
-            <Toolbar/>
+            <Toolbar />
             <List>
                 {list.map((item, index) => (
                     <ListItem key={index} disablePadding>
-                        <ListItemButton component={Link} to={item.path}>
+                        <ListItemButton
+                            component={Link}
+                            to={item.path}
+                            selected={location.pathname === item.path}
+                        >
                             <ListItemIcon>
                                 {item.icon}
                             </ListItemIcon>
