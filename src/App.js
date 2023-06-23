@@ -4,8 +4,6 @@ import Funcionario from './pages/Funcionario';
 import Estudante from './pages/Estudante';
 import Docente from './pages/Docente';
 import './App.css'
-import Teste from './pages/teste';
-// import Test from './pages/test';
 
 function App() {
   return (
@@ -14,9 +12,6 @@ function App() {
         <Route exact path="/" element={<Funcionario />} />
         <Route exact path="/estudante" element={<Estudante />} />
         <Route exact path="/docente" element={<Docente />} />
-        {/* <Route exact path="/teste" element={<Teste  />} /> */}
-        {/* <Route path="/about" element={<AboutPage />} />
-        <Route path="/test" element={<Test />} /> */}
       </Routes>
     </BrowserRouter>
   );

@@ -1,30 +1,17 @@
 import React from 'react';
-import Table from '../components/Table';
-import Menu from '../components/Menu';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-
+import Page from '../components/Page';
 
 //Falta: bloquear edicao da primary key
 export default function Estudante() {
-    const apiPath = 'http://localhost/ru/api/funcionario/'
-    const columnNames = ['cpf', 'nome', 'campus_ru', 'salario', 'turno', 'funcao']
+    const title = 'Estudante' 
+    const apiPath = 'http://localhost/ru/api/estudante/'
+    const columnNames = ['cpf', 'nome', 'matricula', 'curso']
     const primaryKey = 'cpf'
     const opcoes = {
-        turno: ['matutino', 'vespertino', 'noturno'],
-        campus_ru: ['Ondina', 'São Lazaro', 'Vitória'],
-        funcao: ['Cozinheiro', 'Chef de cozinha', 'Nutricionista', 'Auxiliar de cozinha', 'Caixa', 'Auxiliar de limpeza', 'Gerente']
-    }
+        curso: ['Letras', 'Matemática', 'Computação', 'Ciências Sociais', 'Educação', 'Engenharia', 'Saúde', 'Administração',
+            'Artes', 'Direito', 'Comunicação', 'Ciências Biológicas', 'Ciências Exatas']
+    };
     return (
-        <Container maxWidth="xl" sx={{ display: 'flex' }}>
-            <Menu />
-            <Box sx={{ p: 1 }}>
-                <Typography color="primary" variant="h4" gutterBottom>
-                    Estudante
-                </Typography>
-                {/* <Table columnNames={columnNames} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} /> */}
-            </Box>
-        </Container>
+        <Page title={title} columnNames={columnNames} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey}/>
     );
 }
