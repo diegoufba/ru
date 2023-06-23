@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 
 
 //Falta: bloquear edicao da primary key
-export default function Funcionario() {
+export default function Docente() {
     const apiPath = 'http://localhost/ru/api/funcionario/'
     const columnNames = ['cpf', 'nome', 'campus_ru', 'salario', 'turno', 'funcao']
     const primaryKey = 'cpf'
@@ -21,9 +21,9 @@ export default function Funcionario() {
             <Menu />
             <Box sx={{ p: 1 }}>
                 <Typography variant="h4" gutterBottom>
-                    Funcionário
+                    Docente
                 </Typography>
-                <Table columnNames={columnNames} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} />
+                {/* <Table columnNames={columnNames} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} /> */}
             </Box>
         </Container>
     );
