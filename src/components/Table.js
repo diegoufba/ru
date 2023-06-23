@@ -232,7 +232,7 @@ export default function Table(props) {
     return (
         <Box
             sx={{
-                height: 500,
+                height: '100%',
                 width: '100%',
                 '& .actions': {
                     color: 'text.secondary',

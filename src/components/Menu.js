@@ -9,6 +9,7 @@ import ListItemText from '@mui/material/ListItemText';
 import GroupsIcon from '@mui/icons-material/Groups';
 import FaceIcon from '@mui/icons-material/Face';
 import SchoolIcon from '@mui/icons-material/School';
+import Toolbar from '@mui/material/Toolbar';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 
 
@@ -28,11 +29,14 @@ export default function Menu() {
                 '& .MuiDrawer-paper': {
                     width: drawerWidth,
                     boxSizing: 'border-box',
+                    position:'relative',
+                    borderRight: 'none'
                 },
             }}
             variant="permanent"
             anchor="left"
         >
+            <Toolbar/>
             <List>
                 {list.map((item, index) => (
                     <ListItem key={index} disablePadding>

@@ -23,7 +23,9 @@ export default function Funcionario() {
                 <Typography variant="h4" gutterBottom>
                     Funcionário
                 </Typography>
-                <Table columnNames={columnNames} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} />
+                <Box sx={{ boxShadow: 3 }}>
+                    <Table columnNames={columnNames} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} />
+                </Box>
             </Box>
         </Container>
     );
