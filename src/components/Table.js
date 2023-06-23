@@ -21,8 +21,6 @@ import {
 
 
 function EditToolbar(props) {
-    // const { setRows, setRowModesModel } = props;
-    // const columnNames = ['cpf', 'nome', 'salario']
     const { setRows, setRowModesModel, columnNames } = props;
 
     const handleClick = () => {
@@ -33,7 +31,6 @@ function EditToolbar(props) {
         }, { id, isNew: true });
 
         setRows((oldRows) => [...oldRows, newRow]);
-        // setRows((oldRows) => [...oldRows, { id, cpf: '', nome: '', salario: '', isNew: true }]);
         setRowModesModel((oldModel) => ({
             ...oldModel,
             [id]: { mode: GridRowModes.Edit, fieldToFocus: columnNames[0] },
@@ -50,7 +47,7 @@ function EditToolbar(props) {
 }
 
 export default function Table(props) {
-    // const columnNames = ['cpf', 'nome', 'salario']
+    const opcoes = props.opcoes
     const apiPath = props.apiPath
     const columnNames = props.columnNames
     const primaryKey = props.primaryKey
@@ -59,13 +56,26 @@ export default function Table(props) {
     const [snackbar, setSnackbar] = useState(null);
     const handleCloseSnackbar = () => setSnackbar(null);
 
-    const columns = columnNames.map(name => ({
-        field: name,
-        headerName: name,
-        width: 150,
-        editable: true
-        // editable: name === primaryKey ? false: true,
-    }))
+    const columns = columnNames.map(name => {
+        if (opcoes.hasOwnProperty(name)) {
+          return {
+            field: name,
+            headerName: name,
+            width: 150,
+            editable: true,
+            type: 'singleSelect',
+            valueOptions: opcoes[name]
+          };
+        } else {
+          return {
+            field: name,
+            headerName: name,
+            width: 150,
+            editable: true,
+          };
+        }
+      });
+    // editable: name === primaryKey ? false: true
     columns.push({
         field: 'actions',
         type: 'actions',
@@ -121,7 +131,6 @@ export default function Table(props) {
             const response = await fetch(apiPath)
             const jsonData = await response.json()
 
-            // cpf é a chave primaria
             const items = jsonData.map(item => ({
                 ...item,
                 id: item[primaryKey]
@@ -147,9 +156,14 @@ export default function Table(props) {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     };
 
-    const handleDeleteClick = (id) => () => {
-        setRows(rows.filter((row) => row.id !== id));
-        saveOnDatabase(null, 'DELETE', id);
+    const handleDeleteClick = (id) => async () => {
+        const [sucess, message] = await saveOnDatabase(null, 'DELETE', id);
+        if (sucess) {
+            setRows(rows.filter((row) => row.id !== id));
+            setSnackbar({ children: message, severity: 'success' });
+        } else {
+            setSnackbar({ children: message, severity: 'error' });
+        }
     };
 
 
@@ -173,9 +187,8 @@ export default function Table(props) {
             })
         }
 
-        // const apiUrl = id ? `${apiPath}${id}` : apiPath;
         const apiUrl = id ? `${apiPath}?${primaryKey}=${id}` : apiPath;
-        let result = [false,""]
+        let result = [false, ""]
 
         await fetch(apiUrl, {
             method: method,
@@ -186,11 +199,9 @@ export default function Table(props) {
         })
             .then(response => {
                 if (response.ok) {
-                    result = [true,`Requisição ${method} bem-sucedida`]
-                    // console.log(`Requisição ${method} bem-sucedida`);
+                    result = [true, `Requisição ${method} bem-sucedida`]
                 } else {
-                    result = [false,`Erro na requisição ${method}`]
-                    // console.error(`Erro na requisição ${method}`);
+                    result = [false, `Erro na requisição ${method}`]
                 }
             })
         return result
@@ -198,7 +209,7 @@ export default function Table(props) {
 
     const processRowUpdate = async (newRow) => {
         const method = newRow.isNew ? 'POST' : 'PUT'
-        const [sucess,message] = await saveOnDatabase(newRow, method)
+        const [sucess, message] = await saveOnDatabase(newRow, method)
         if (sucess) {
             const updatedRow = { ...newRow, isNew: false };
             setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
