@@ -24,16 +24,16 @@ function EditToolbar(props) {
     const { setRows, setRowModesModel, columnNames } = props;
 
     const handleClick = () => {
-        const id = randomId();
+        const internalId = randomId();
         const newRow = columnNames.reduce((acc, columnName) => {
             acc[columnName] = '';
             return acc;
-        }, { id, isNew: true });
+        }, { internalId, isNew: true });
 
         setRows((oldRows) => [...oldRows, newRow]);
         setRowModesModel((oldModel) => ({
             ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: columnNames[0] },
+            [internalId]: { mode: GridRowModes.Edit, fieldToFocus: columnNames[0] },
         }));
     };
 
@@ -58,23 +58,23 @@ export default function Table(props) {
 
     const columns = columnNames.map(name => {
         if (opcoes.hasOwnProperty(name)) {
-          return {
-            field: name,
-            headerName: name,
-            width: 150,
-            editable: true,
-            type: 'singleSelect',
-            valueOptions: opcoes[name],
-          };
+            return {
+                field: name,
+                headerName: name,
+                width: 150,
+                editable: true,
+                type: 'singleSelect',
+                valueOptions: opcoes[name],
+            };
         } else {
-          return {
-            field: name,
-            headerName: name,
-            width: 150,
-            editable: true,
-          };
+            return {
+                field: name,
+                headerName: name,
+                width: 150,
+                editable: true,
+            };
         }
-      });
+    });
     // editable: name === primaryKey ? false: true
     columns.push({
         field: 'actions',
@@ -114,7 +114,7 @@ export default function Table(props) {
                     color="inherit"
                 />,
                 <GridActionsCellItem
-                    icon={<DeleteIcon color='error'/>}
+                    icon={<DeleteIcon color='error' />}
                     label="Delete"
                     onClick={handleDeleteClick(id)}
                     color="inherit"
@@ -133,7 +133,7 @@ export default function Table(props) {
 
             const items = jsonData.map(item => ({
                 ...item,
-                id: item[primaryKey]
+                internalId: randomId()
             }))
             setRows(items)
 
@@ -148,18 +148,21 @@ export default function Table(props) {
         }
     };
 
-    const handleEditClick = (id) => () => {
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    const handleEditClick = (internalId) => () => {
+        setRowModesModel({ ...rowModesModel, [internalId]: { mode: GridRowModes.Edit } });
     };
 
-    const handleSaveClick = (id) => () => {
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    const handleSaveClick = (internalId) => () => {
+        setRowModesModel({ ...rowModesModel, [internalId]: { mode: GridRowModes.View } });
     };
 
-    const handleDeleteClick = (id) => async () => {
+    const handleDeleteClick = (internalId) => async () => {
+        const row = rows.find(row => row.internalId === internalId)
+        const id = row[primaryKey]
+        
         const [sucess, message] = await saveOnDatabase(null, 'DELETE', id);
         if (sucess) {
-            setRows(rows.filter((row) => row.id !== id));
+            setRows(rows.filter((row) => row.internalId !== internalId));
             setSnackbar({ children: message, severity: 'success' });
         } else {
             setSnackbar({ children: message, severity: 'error' });
@@ -167,15 +170,15 @@ export default function Table(props) {
     };
 
 
-    const handleCancelClick = (id) => () => {
+    const handleCancelClick = (internalId) => () => {
         setRowModesModel({
             ...rowModesModel,
-            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+            [internalId]: { mode: GridRowModes.View, ignoreModifications: true },
         });
 
-        const editedRow = rows.find((row) => row.id === id);
+        const editedRow = rows.find((row) => row.internalId === internalId);
         if (editedRow.isNew) {
-            setRows(rows.filter((row) => row.id !== id));
+            setRows(rows.filter((row) => row.internalId !== internalId));
         }
     };
 
@@ -212,7 +215,7 @@ export default function Table(props) {
         const [sucess, message] = await saveOnDatabase(newRow, method)
         if (sucess) {
             const updatedRow = { ...newRow, isNew: false };
-            setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+            setRows(rows.map((row) => (row.internalId === newRow.internalId ? updatedRow : row)));
             setSnackbar({ children: message, severity: 'success' });
             return updatedRow;
         }
@@ -243,12 +246,13 @@ export default function Table(props) {
             }}
         >
             <DataGrid
-              sx={{
-                '.MuiDataGrid-columnHeaderTitle': { 
-                   fontWeight: 'bold !important',
-                },
-                backgroundColor:'white'
-              }}
+                sx={{
+                    '.MuiDataGrid-columnHeaderTitle': {
+                        fontWeight: 'bold !important',
+                    },
+                    backgroundColor: 'white'
+                }}
+                getRowId={(row) => row.internalId}
                 rows={rows}
                 columns={columns}
                 editMode="row"
