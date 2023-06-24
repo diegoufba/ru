@@ -51,8 +51,10 @@ export default function Table(props) {
     const apiPath = props.apiPath
     const columnNames = props.columnNames
     const primaryKey = props.primaryKey
+    const rows = props.row
+    const setRows = props.setRows
 
-    const [rows, setRows] = useState([]);
+    // const [rows, setRows] = useState([]);
     const [snackbar, setSnackbar] = useState(null);
     const handleCloseSnackbar = () => setSnackbar(null);
 
@@ -124,9 +126,9 @@ export default function Table(props) {
     })
     const [rowModesModel, setRowModesModel] = useState({});
 
-    useEffect(() => { fetchData(apiPath, primaryKey); }, [])
+    useEffect(() => { fetchData(apiPath); }, [])
 
-    const fetchData = async (apiPath, primaryKey) => {
+    const fetchData = async (apiPath) => {
         try {
             const response = await fetch(apiPath)
             const jsonData = await response.json()
