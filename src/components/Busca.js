@@ -12,11 +12,24 @@ export default function Busca(props) {
     const baseApiPath = props.apiPath + 'busca/'
     const setRows = props.setRows
 
+    const attributeToCompareName = props.attributeToCompareName
+    const operadores = ["<", "<=", "=", ">=", ">"]
+    const [operadorValue, setOperadorValue] = useState('=');
+    const [attributeToCompare, setAttributeToCompare] = useState('')
+
     const [nome, setNome] = useState('');
     const [parametros, setParametros] = useState({});
 
     const handleChangeNome = (event) => {
         setNome(event.target.value);
+    };
+
+    const handleChangeOperador = (event) => {
+        setOperadorValue(event.target.value);
+    };
+
+    const handleChangeattributeToCompare = (event) => {
+        setAttributeToCompare(event.target.value);
     };
 
     const handleChangeParametro = (event, chave) => {
@@ -30,6 +43,8 @@ export default function Busca(props) {
     const handleClear = () => {
         setNome('')
         setParametros({})
+        setOperadorValue('=')
+        setAttributeToCompare('')
         fetchData(false)
     }
 
@@ -38,7 +53,9 @@ export default function Busca(props) {
 
     const fetchData = async (includeQueries) => {
         try {
-            const parametrosComNome = { ...parametros, nome: nome }
+            const parametrosComNome = attributeToCompareName ? { ...parametros, nome: nome, operador: operadorValue, [attributeToCompareName]: attributeToCompare } :
+                { ...parametros, nome: nome}
+            // console.log(parametrosComNome)
             const queryParams = new URLSearchParams(parametrosComNome).toString();
             const apiPath = includeQueries ? `${baseApiPath}?${queryParams}` : baseApiPath;
             console.log(apiPath)
@@ -59,30 +76,52 @@ export default function Busca(props) {
     return (
         <Box component="form" noValidate autoComplete="off">
             <TextField value={nome} onChange={handleChangeNome} fullWidth id="outlined-basic" label="Nome" variant="outlined" />
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                {Object.keys(opcoes).map((chave) => (
-                    <TextField
-                        key={chave}
-                        sx={{ mr: 2, minWidth: 200 }}
-                        id={`outlined-select-${chave}`}
-                        select
-                        label={chave}
-                        defaultValue="Todos"
-                        value={parametros[chave] || 'Todos'}
-                        onChange={(event) => handleChangeParametro(event, chave)}
-                    >
-                        <MenuItem key='Todos' value='Todos'>
-                            Todos
-                        </MenuItem>
-                        {opcoes[chave].map((opcao) => (
-                            <MenuItem key={opcao} value={opcao}>
-                                {opcao}
+            <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2 }}>
+                <Box>
+                    {Object.keys(opcoes).map((chave) => (
+                        <TextField
+                            key={chave}
+                            sx={{ mr: 2, minWidth: 200 }}
+                            id={`outlined-select-${chave}`}
+                            select
+                            label={chave}
+                            defaultValue="Todos"
+                            value={parametros[chave] || 'Todos'}
+                            onChange={(event) => handleChangeParametro(event, chave)}
+                        >
+                            <MenuItem key='Todos' value='Todos'>
+                                Todos
                             </MenuItem>
-                        ))}
-                    </TextField>
-                ))}
-                <Button onClick={()=>{fetchData(true)}} size="large" variant="contained">Filtrar</Button>
-                <Button onClick={handleClear} sx={{ ml: 2 }} size="large" variant="outlined">Limpar</Button>
+                            {opcoes[chave].map((opcao) => (
+                                <MenuItem key={opcao} value={opcao}>
+                                    {opcao}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    ))}
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                    {attributeToCompareName ? <>
+                        <TextField
+                            sx={{ minWidth: 'calc(6em + 20px)' }}
+                            key="operador"
+                            value={operadorValue}
+                            id="outlined-select-operador"
+                            select
+                            label={attributeToCompareName}
+                            onChange={handleChangeOperador}
+                        >
+                            {operadores.map((operador) => (
+                                <MenuItem key={operador} value={operador}>
+                                    {operador}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                        <TextField onChange={handleChangeattributeToCompare} sx={{ mr: 2 }} id="outlined-attributeToCompare" value={attributeToCompare} label='valor' variant="outlined" />
+                    </> : null}
+                    <Button onClick={() => { fetchData(true) }} size="large" variant="contained">Filtrar</Button>
+                    <Button onClick={handleClear} sx={{ ml: 2 }} size="large" variant="outlined">Limpar</Button>
+                </Box>
             </Box>
         </Box>
     );

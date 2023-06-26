@@ -6,12 +6,13 @@ require_once '../../header.php';
 function busca($conn)
 {
     // Obtém os parâmetros da requisição GET
-    $nome = isset($_GET['nome']) ? $_GET['nome'] : 'Todos';
     $campus_ru = isset($_GET['campus_ru']) ? $_GET['campus_ru'] : 'Todos';
-    $salario = isset($_GET['salario']) ? $_GET['salario'] : 'Todos';
-    $operador_salario = isset($_GET['operador_salario']) ? $_GET['operador_salario'] : 'Todos';
     $turno = isset($_GET['turno']) ? $_GET['turno'] : 'Todos';
     $funcao = isset($_GET['funcao']) ? $_GET['funcao'] : 'Todos';
+    
+    $nome = isset($_GET['nome']) ? $_GET['nome'] : '';
+    $operador = isset($_GET['operador']) ? $_GET['operador'] : '';
+    $salario = isset($_GET['salario']) ? $_GET['salario'] : '';
 
     // Constrói a consulta SQL inicial
     $sql = "SELECT Funcionario.*, Cargo.*
@@ -21,16 +22,16 @@ function busca($conn)
         WHERE 1=1";
 
     // Verifica se o parâmetro nome está presente
-    if ($nome != 'Todos') {
+    if ($nome != '') {
         $nome = trim($nome);
         // Adiciona a condição de pesquisa por nome (case-insensitive e ignorando espaços extras)
         $sql .= " AND LOWER(TRIM(Funcionario.nome)) LIKE LOWER('%$nome%')";
     }
 
     // Verifica se tanto o parâmetro salario quanto operador_salario estão presentes
-    if ($salario != 'Todos' && $operador_salario != 'Todos') {
+    if ($salario != '') {
         // Adiciona a condição de comparação de salário (dinamicamente com base no operador escolhido)
-        $sql .= " AND Cargo.salario $operador_salario $salario";
+        $sql .= " AND Cargo.salario $operador $salario";
     }
 
     // Verifica se o parâmetro turno está presente
