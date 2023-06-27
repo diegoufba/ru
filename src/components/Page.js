@@ -18,7 +18,7 @@ export default function Page(props) {
                     {props.title}
                 </Typography>
                 <Box sx={{ boxShadow: 3, mt: 2, p:2,backgroundColor: 'white' }}>
-                    <Busca setRows={setRows} opcoes={props.opcoes} apiPath={props.apiPath} attributeToCompareName={props.attributeToCompareName}/>
+                    <Busca setRows={setRows} columnNames={props.columnNames} opcoes={props.opcoes} apiPath={props.apiPath} attributeToCompareName={props.attributeToCompareName}/>
                 </Box>
                 <Box sx={{ boxShadow: 3, mt: 2 }}>
                     <Table row={rows} setRows={setRows} columnNames={props.columnNames} opcoes={props.opcoes} apiPath={props.apiPath} primaryKey={props.primaryKey} />

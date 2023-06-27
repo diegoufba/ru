@@ -11,6 +11,7 @@ export default function Busca(props) {
     const opcoes = props.opcoes
     const baseApiPath = props.apiPath + 'busca/'
     const setRows = props.setRows
+    const nomeIsDefined = props.columnNames.includes('nome')
 
     const attributeToCompareName = props.attributeToCompareName
     const operadores = ["<", "<=", "=", ">=", ">"]
@@ -48,14 +49,11 @@ export default function Busca(props) {
         fetchData(false)
     }
 
-    // const baseApiPath = 'http://localhost/ru/api/funcionario/busca'
-    // const query = {campus_ru: 'Ondina', funcao: 'Chef de cozinha', turno: 'vespertino'}
-
     const fetchData = async (includeQueries) => {
         try {
             const parametrosComNome = attributeToCompareName ? { ...parametros, nome: nome, operador: operadorValue, [attributeToCompareName]: attributeToCompare } :
-                { ...parametros, nome: nome}
-            // console.log(parametrosComNome)
+                { ...parametros, nome: nome }
+            console.log(parametrosComNome)
             const queryParams = new URLSearchParams(parametrosComNome).toString();
             const apiPath = includeQueries ? `${baseApiPath}?${queryParams}` : baseApiPath;
             console.log(apiPath)
@@ -75,7 +73,7 @@ export default function Busca(props) {
 
     return (
         <Box component="form" noValidate autoComplete="off">
-            <TextField value={nome} onChange={handleChangeNome} fullWidth id="outlined-basic" label="Nome" variant="outlined" />
+            {nomeIsDefined ? <TextField value={nome} onChange={handleChangeNome} fullWidth id="outlined-basic" label="Nome" variant="outlined" /> : null}
             <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2 }}>
                 <Box>
                     {Object.keys(opcoes).map((chave) => (
