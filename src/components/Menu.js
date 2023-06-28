@@ -11,16 +11,18 @@ import FaceIcon from '@mui/icons-material/Face';
 import SchoolIcon from '@mui/icons-material/School';
 import Toolbar from '@mui/material/Toolbar';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 
 export default function Menu() {
     const location = useLocation()
     const drawerWidth = 240;
     const list = [
-        { text: 'Funcionário', icon: <GroupsIcon />, path: '/' },
+        { text: 'Simulacão', icon: <RestaurantIcon />, path: '/' },
+        { text: 'Funcionário', icon: <GroupsIcon />, path: '/funcionario' },
         { text: 'Estudante', icon: <FaceIcon />, path: '/estudante' },
         { text: 'Docente', icon: <SchoolIcon />, path: '/docente' },
-        { text: 'Produto', icon: <RestaurantIcon />, path: '/produto' }
+        { text: 'Produto', icon: <InventoryIcon />, path: '/produto' }
     ];
 
     return (

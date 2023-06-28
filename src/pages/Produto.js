@@ -7,12 +7,11 @@ export default function Docente() {
     const apiPath = 'http://localhost/ru/api/produto/'
     const columnNames = ['id', 'nome_empresa', 'valor_nutricional', 'data_validade']
     const primaryKey = 'id'
+    const attributeToCompareName = ''
     const opcoes = {
         nome_empresa: ['Company A', 'Company B', 'Company C']
     };
-
-
     return (
-        <Page title={title} columnNames={columnNames} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} />
+        <Page title={title} columnNames={columnNames} attributeToCompareName={attributeToCompareName} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} />
     );
 }
