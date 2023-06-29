@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Table from './Table';
+import CrudTable from './CrudTable';
 import Menu from './Menu';
 import Busca from './Busca';
 import Box from '@mui/material/Box';
@@ -21,7 +21,7 @@ export default function Page(props) {
                     <Busca setRows={setRows} columnNames={props.columnNames} opcoes={props.opcoes} apiPath={props.apiPath} attributeToCompareName={props.attributeToCompareName}/>
                 </Box>
                 <Box sx={{ boxShadow: 3, mt: 2 }}>
-                    <Table row={rows} setRows={setRows} columnNames={props.columnNames} opcoes={props.opcoes} apiPath={props.apiPath} primaryKey={props.primaryKey} />
+                    <CrudTable row={rows} setRows={setRows} columnNames={props.columnNames} opcoes={props.opcoes} apiPath={props.apiPath} primaryKey={props.primaryKey} />
                 </Box>
             </Box>
         </Container>

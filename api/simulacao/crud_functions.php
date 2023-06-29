@@ -4,9 +4,8 @@ function getAll($conn)
 {
     if (isset($_GET['cpf'])) {
         $cpf = $_GET['cpf'];
-        $campus_ru = $_GET['campus_ru'];
 
-        $sql = "SELECT nome, cpf,
+        $sqlUsuario = "SELECT nome, cpf,
         CASE
             WHEN EXISTS(SELECT 1 FROM Docente WHERE $cpf = Docente.cpf) THEN 'Docente'
             WHEN EXISTS(SELECT 1 FROM Pagante WHERE $cpf = Pagante.cpf) THEN 'Pagante'
@@ -20,111 +19,110 @@ function getAll($conn)
             FROM Conta
             WHERE $cpf IN (Conta.cpf_pagante, Conta.cpf_docente)
             LIMIT 1
-        ) AS saldo
+        ) AS saldo,
+        (
+            SELECT 
+                CASE
+                    WHEN Conta.cpf_pagante IS NOT NULL OR Conta.cpf_docente IS NOT NULL THEN Conta.id
+                END
+            FROM Conta
+            WHERE $cpf IN (Conta.cpf_pagante, Conta.cpf_docente)
+            LIMIT 1
+        ) AS id_conta
         FROM
         (SELECT nome, cpf FROM Estudante
         UNION 
         SELECT nome, cpf FROM Docente) AS usuario
         WHERE usuario.cpf = $cpf";
 
-        $result = $conn->query($sql);
 
-        if ($result->num_rows > 0) {
-            return $result->fetch_assoc();
+        $resultUsuario = $conn->query($sqlUsuario);
+        $usuario = null;
+
+        if ($resultUsuario->num_rows > 0) {
+            $usuario = $resultUsuario->fetch_assoc();
         }
+
+        // CONTA
+        $id_conta = $usuario['id_conta'];
+        $dataConta = array();
+
+        if ($id_conta) {
+            $sqlConta = "SELECT id,tipo,valor,`data` 
+            FROM Movimentacao WHERE Movimentacao.id_conta = $id_conta
+            ORDER BY `data`";
+
+            $resultConta = $conn->query($sqlConta);
+
+            if ($resultConta->num_rows > 0) {
+                while ($row = $resultConta->fetch_assoc()) {
+                    $dataConta[] = $row;
+                }
+            }
+        }
+        return array("usuario" => $usuario, "conta" => $dataConta);
     } else {
-        $sql = "SELECT cpf FROM Estudante UNION SELECT cpf FROM Docente";
+        $sql_cpf = "SELECT cpf FROM Estudante UNION SELECT cpf FROM Docente";
+        $resultCpf = $conn->query($sql_cpf);
+        $datacpf = array();
 
-        $result = $conn->query($sql);
-
-        $data = array();
-
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $data[] = $row['cpf'];
+        if ($resultCpf->num_rows > 0) {
+            while ($row = $resultCpf->fetch_assoc()) {
+                $datacpf[] = $row['cpf'];
             }
         }
 
-        return $data;
+        $sql_campus = "SELECT campus FROM RU";
+        $resultCampus = $conn->query($sql_campus);
+        $dataCampus = array();
+
+        if ($resultCampus->num_rows > 0) {
+            while ($row = $resultCampus->fetch_assoc()) {
+                $dataCampus[] = $row['campus'];
+            }
+        }
+
+
+        return array("cpfs" => $datacpf, "campus" => $dataCampus);
     }
-
-
-
-
-
-    // $sql = "SELECT nome, cpf,
-    // CASE
-    //     WHEN EXISTS(SELECT 1 FROM Docente WHERE usuario.cpf = Docente.cpf) THEN 'Docente'
-    //     WHEN EXISTS(SELECT 1 FROM Pagante WHERE usuario.cpf = Pagante.cpf) THEN 'Pagante'
-    //     WHEN EXISTS(SELECT 1 FROM Bolsista WHERE usuario.cpf = Bolsista.cpf) THEN 'Bolsista'
-    // END AS tipo,
-    // (
-    //     SELECT 
-    //         CASE
-    //             WHEN Conta.cpf_pagante IS NOT NULL OR Conta.cpf_docente IS NOT NULL THEN Conta.saldo
-    //         END
-    //     FROM Conta
-    //     WHERE usuario.cpf IN (Conta.cpf_pagante, Conta.cpf_docente)
-    //     LIMIT 1
-    // ) AS saldo
-    // FROM
-    // (SELECT nome, cpf FROM Estudante
-    // UNION 
-    // SELECT nome, cpf FROM Docente) AS usuario";
-
-    // $result = $conn->query($sql);
-
-    // $data = array();
-
-    // if ($result->num_rows > 0) {
-    //     while ($row = $result->fetch_assoc()) {
-    //         $data[] = $row;
-    //     }
-    // }
-
-    // return $data;
 }
-
-// function getAll($conn)
-// {
-//     $cpf = $_GET['cpf'];
-//     $campus_ru = $_GET['campus_ru'];
-
-//     $sql = "SELECT nome FROM Docente WHERE cpf = $cpf";
-
-//     $result = $conn->query($sql);
-
-//     if ($result->num_rows > 0) {
-//         return $result->fetch_assoc();
-//     }
-
-// }
 
 // Função para inserir um novo produto
 function insert($conn, $requestData)
 {
-    $nome_empresa = $requestData['nome_empresa'];
-    $valor_nutricional = $requestData['valor_nutricional'];
-    $data_validade = $requestData['data_validade'];
+    $id_conta = $requestData['id_conta'];
+    $valor = $requestData['valor'];
+    $tipo = $requestData['tipo'];
 
-    $sqlProduto = "INSERT INTO Produto (nome_empresa, valor_nutricional, data_validade) VALUES ('$nome_empresa', '$valor_nutricional', '$data_validade')";
-    $resultProduto = $conn->query($sqlProduto);
+    date_default_timezone_set('America/Sao_Paulo');
+    $data = date('Y-m-d H:i:s');
 
-    return ($resultProduto);
+    $sqlMovimentacao = "INSERT INTO Movimentacao (id_conta, valor, tipo,`data`) VALUES ('$id_conta', '$valor', '$tipo','$data')";
+    $resultMovimentacao = $conn->query($sqlMovimentacao);
+
+    return ($resultMovimentacao);
 }
 
 // Função para atualizar um produto existente
 function update($conn, $requestData)
 {
-    $id = $requestData['id'];
-    $nome_empresa = $requestData['nome_empresa'];
-    $valor_nutricional = $requestData['valor_nutricional'];
-    $data_validade = $requestData['data_validade'];
+    $id_conta = $requestData['id_conta'];
+    $valor = $requestData['valor'];
 
-    $sqlProduto = "UPDATE Produto SET nome_empresa = '$nome_empresa', valor_nutricional = '$valor_nutricional', data_validade = '$data_validade'  WHERE id = '$id'";
-    $resultProduto = $conn->query($sqlProduto);
+    $sqlSaldo = "SELECT saldo FROM conta WHERE Conta.id = $id_conta";
+    $resultSaldo = $conn->query($sqlSaldo);
 
-    return ($resultProduto);
+    if ($resultSaldo->num_rows > 0) {
+        $saldo = $resultSaldo->fetch_assoc();
+        $newSaldo = $saldo['saldo'] + $valor;
+
+        $sqlConta = "UPDATE Conta SET saldo = '$newSaldo' WHERE Conta.id = $id_conta";
+        $resultConta = $conn->query($sqlConta);
+
+        return ($resultConta);
+    } else {
+        return (false);
+    }
 }
 
 
