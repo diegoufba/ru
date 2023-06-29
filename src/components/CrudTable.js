@@ -46,7 +46,7 @@ function EditToolbar(props) {
     );
 }
 
-export default function Table(props) {
+export default function CrudTable(props) {
     const opcoes = props.opcoes
     const apiPath = props.apiPath
     const columnNames = props.columnNames
@@ -64,7 +64,7 @@ export default function Table(props) {
                 field: name,
                 headerName: name,
                 width: 150,
-                editable: true,
+                editable: name === 'id' ? false : true,
                 type: 'singleSelect',
                 valueOptions: opcoes[name],
             };
@@ -73,7 +73,7 @@ export default function Table(props) {
                 field: name,
                 headerName: name,
                 width: 150,
-                editable: true,
+                editable: name === 'id' ? false : true,
             };
         }
     });

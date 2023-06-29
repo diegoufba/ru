@@ -5,6 +5,7 @@ import Funcionario from './pages/Funcionario';
 import Estudante from './pages/Estudante';
 import Docente from './pages/Docente';
 import Produto from './pages/Produto';
+import Movimentacao from './pages/Movimentacao';
 import './App.css'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route exact path="/" element={<Simulacao />} />
+        <Route exact path="/movimentacao" element={<Movimentacao />} />
         <Route exact path="/funcionario" element={<Funcionario />} />
         <Route exact path="/estudante" element={<Estudante />} />
         <Route exact path="/docente" element={<Docente />} />

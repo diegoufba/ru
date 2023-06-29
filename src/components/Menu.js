@@ -12,6 +12,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import Toolbar from '@mui/material/Toolbar';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 
 
 export default function Menu() {
@@ -19,6 +20,7 @@ export default function Menu() {
     const drawerWidth = 240;
     const list = [
         { text: 'Simulacão', icon: <RestaurantIcon />, path: '/' },
+        { text: 'Movimentação', icon: <CurrencyExchangeIcon />, path: '/movimentacao' },
         { text: 'Funcionário', icon: <GroupsIcon />, path: '/funcionario' },
         { text: 'Estudante', icon: <FaceIcon />, path: '/estudante' },
         { text: 'Docente', icon: <SchoolIcon />, path: '/docente' },
