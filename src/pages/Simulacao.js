@@ -96,17 +96,10 @@ export default function Simulacao(props) {
     }
 
     const handleAlmocarButton = async () => {
-        // await almocar()
-        const body = {
-            cpf: cpf,
-            tipo_usuario: dados.tipo,
-            id_prato: prato_id,
-            campus_ru: campus_ru,
-            tipo: 'almoco',
-            id_conta: dados.id_conta,
-        }
-        console.log(body)
-        await almocar()
+        const op = await almocar()
+        setRecargaSucess(op)
+        await fetchData(apiPath, cpf)
+        setOpen(true)
     }
 
     async function almocar() {
@@ -182,10 +175,10 @@ export default function Simulacao(props) {
             <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={open} autoHideDuration={2000} onClose={handleClose}>
                 {recargaSucess ?
                     <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                        Recarga realizada com sucesso
+                        Operacão realizada com sucesso
                     </Alert> :
                     <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                        Falha na Recarga
+                        Falha na Operacão
                     </Alert>}
 
             </Snackbar>

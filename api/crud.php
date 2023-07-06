@@ -32,10 +32,10 @@ switch ($method) {
         
         if ($result) {
             // Retorna uma resposta de sucesso
-            echo json_encode(['message' => 'Inserido com sucesso.']);
+            echo json_encode(['success' => true]);
         } else {
             // Retorna uma resposta de erro
-            echo json_encode(['error' => 'Falha ao inserir.']);
+            echo json_encode(['success' => false]);
         }
         break;
     case 'PUT':
@@ -47,10 +47,10 @@ switch ($method) {
         
         if ($result) {
             // Retorna uma resposta de sucesso
-            echo json_encode(['message' => 'Atualizado com sucesso.']);
+            echo json_encode(['success' => true]);
         } else {
             // Retorna uma resposta de erro
-            echo json_encode(['error' => 'Falha ao atualizar.']);
+            echo json_encode(['success' => false]);
         }
         break;
     case 'DELETE':
@@ -62,10 +62,10 @@ switch ($method) {
         
         if ($result) {
             // Retorna uma resposta de sucesso
-            echo json_encode(['message' => 'Excluído com sucesso.']);
+            echo json_encode(['success' => true]);
         } else {
             // Retorna uma resposta de erro
-            echo json_encode(['error' => 'Falha ao excluir.']);
+            echo json_encode(['success' => false]);
         }
         break;
     default:

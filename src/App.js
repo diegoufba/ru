@@ -4,6 +4,7 @@ import Simulacao from './pages/Simulacao';
 import Funcionario from './pages/Funcionario';
 import Estudante from './pages/Estudante';
 import Docente from './pages/Docente';
+import Pagante from './pages/Pagante';
 import Movimentacao from './pages/Movimentacao';
 import './App.css'
 
@@ -16,6 +17,7 @@ function App() {
         <Route exact path="/funcionario" element={<Funcionario />} />
         <Route exact path="/estudante" element={<Estudante />} />
         <Route exact path="/docente" element={<Docente />} />
+        <Route exact path="/pagante" element={<Pagante />} />
       </Routes>
     </BrowserRouter>
   );
