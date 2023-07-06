@@ -184,33 +184,80 @@ export default function CrudTable(props) {
         }
     };
 
+    // async function saveOnDatabase(updatedRow, method, id) {
+    //     const row = {}
+    //     if (method !== 'DELETE') {
+    //         columnNames.map((columnName) => {
+    //             row[columnName] = updatedRow[columnName]
+    //         })
+    //     }
+
+    //     const apiUrl = id ? `${apiPath}?id=${id}` : apiPath;
+    //     let result = [false, ""]
+
+    //     await fetch(apiUrl, {
+    //         method: method,
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: method !== 'DELETE' ? JSON.stringify(row) : undefined,
+    //     })
+    //         .then(response => {
+    //             if (response.ok) {
+    //                 result = [true, `Requisição ${method} bem-sucedida`]
+    //             } else {
+    //                 result = [false, `Erro na requisição ${method}`]
+    //             }
+    //         })
+    //     return result
+    // }
+
+    // async function saveOnDatabase(updatedRow, method, id) {
+    //     const row = {};
+    //     if (method !== 'DELETE') {
+    //       columnNames.map((columnName) => {
+    //         row[columnName] = updatedRow[columnName];
+    //       });
+    //     }
+      
     async function saveOnDatabase(updatedRow, method, id) {
-        const row = {}
+        const row = {};
         if (method !== 'DELETE') {
-            columnNames.map((columnName) => {
-                row[columnName] = updatedRow[columnName]
-            })
+          columnNames.map((columnName) => {
+            row[columnName] = updatedRow[columnName];
+          });
         }
-
+      
         const apiUrl = id ? `${apiPath}?id=${id}` : apiPath;
-        let result = [false, ""]
-
-        await fetch(apiUrl, {
+        let result = [false, ""];
+      
+        try {
+          const response = await fetch(apiUrl, {
             method: method,
             headers: {
-                'Content-Type': 'application/json',
+              'Content-Type': 'application/json',
             },
             body: method !== 'DELETE' ? JSON.stringify(row) : undefined,
-        })
-            .then(response => {
-                if (response.ok) {
-                    result = [true, `Requisição ${method} bem-sucedida`]
-                } else {
-                    result = [false, `Erro na requisição ${method}`]
-                }
-            })
-        return result
-    }
+          });
+      
+          if (response.ok) {
+            const responseData = await response.json();
+            if (responseData.success) {
+              result = [true, `Requisição ${method} e operação no banco de dados bem-sucedidas`];
+            } else {
+              result = [false, `Erro na operação no banco de dados`];
+            }
+          } else {
+            result = [false, `Erro na requisição ${method}`];
+          }
+        } catch (error) {
+          result = [false, `Erro na requisição ${method}: ${error.message}`];
+        }
+      
+        return result;
+      }
+      
+      
 
     const processRowUpdate = async (newRow) => {
         const method = newRow.isNew ? 'POST' : 'PUT'
