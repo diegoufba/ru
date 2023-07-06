@@ -42,9 +42,11 @@ export default function Simulacao(props) {
     const [dados, setDados] = useState({})
     const [cpfs, setCpfs] = useState([])
     const [campus, setCampus] = useState([])
+    const [pratos, setPratos] = useState([])
 
     const [cpf, setCpf] = useState('')
     const [campus_ru, setCampus_ru] = useState('')
+    const [prato_id, setPrato_id] = useState(1)
 
     const handleCpfChange = async (event) => {
         const cpf = event.target.value
@@ -55,6 +57,10 @@ export default function Simulacao(props) {
     const handleCampus_ruChange = (event) => {
         setCampus_ru(event.target.value);
     };
+    const handlePrato_idChange = (event) => {
+        setPrato_id(event.target.value);
+    };
+
 
     useEffect(() => { fetchData(apiPath); }, [])
 
@@ -71,6 +77,7 @@ export default function Simulacao(props) {
             } else {
                 setCpfs(jsonData.cpfs)
                 setCampus(jsonData.campus)
+                setPratos(jsonData.pratos)
 
                 setCpf(jsonData.cpfs[1])
                 fetchData(apiPath, jsonData.cpfs[1])
@@ -86,6 +93,47 @@ export default function Simulacao(props) {
         setRecargaSucess(op)
         await fetchData(apiPath, cpf)
         setOpen(true)
+    }
+
+    const handleAlmocarButton = async () => {
+        // await almocar()
+        const body = {
+            cpf: cpf,
+            tipo_usuario: dados.tipo,
+            id_prato: prato_id,
+            campus_ru: campus_ru,
+            tipo: 'almoco',
+            id_conta: dados.id_conta,
+        }
+        console.log(body)
+        await almocar()
+    }
+
+    async function almocar() {
+        const body = {
+            cpf: cpf,
+            tipo_usuario: dados.tipo,
+            id_prato: prato_id,
+            campus_ru: campus_ru,
+            tipo: 'refeicao',
+            id_conta: dados.id_conta,
+        }
+        let result = false
+        await fetch(apiPath, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body)
+        })
+            .then(response => {
+                if (response.ok) {
+                    result = true
+                } else {
+                    result = false
+                }
+            })
+        return result
     }
 
     async function recarga(valor) {
@@ -190,6 +238,22 @@ export default function Simulacao(props) {
                             </Typography>
                             <TextField
                                 sx={{ minWidth: 'calc(8em + 20px)' }}
+                                id="outlined-select-prato"
+                                select
+                                label="prato"
+                                value={prato_id}
+                                onChange={handlePrato_idChange}
+                                variant='standard'
+                            >
+                                {pratos.map((prato) => (
+                                    <MenuItem key={prato.nome} value={prato.id}>
+                                        {`${prato.nome} (${prato.valor_nutricional} kcal)`}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                            <br />
+                            <TextField
+                                sx={{ minWidth: 'calc(8em + 20px)', mt: 2 }}
                                 id="outlined-select-campus"
                                 select
                                 label="campus_ru"
@@ -204,11 +268,11 @@ export default function Simulacao(props) {
                                 ))}
                             </TextField>
                             <br />
-                            <Button sx={{ mt: 2, width: '100%' }} disabled={cpf && campus_ru ? false : true} variant="contained">Almoçar</Button>
+                            <Button onClick={handleAlmocarButton} sx={{ mt: 2, width: '100%' }} disabled={cpf && campus_ru && prato_id ? false : true} variant="contained">Almoçar</Button>
                         </Paper>
                         {dados.tipo !== 'Bolsista' ?
                             <Paper elevation={3} sx={{ mt: 2, ml: 2, p: 2, borderRadius: '1rem' }}>
-                                <Typography sx={{ mb: 2 }} variant="h5" gutterBottom>
+                                <Typography sx={{ mb: 6 }} variant="h5" gutterBottom>
                                     Adicionar Credito
                                 </Typography>
                                 <Grid

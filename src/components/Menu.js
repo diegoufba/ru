@@ -24,7 +24,6 @@ export default function Menu() {
         { text: 'Funcionário', icon: <GroupsIcon />, path: '/funcionario' },
         { text: 'Estudante', icon: <FaceIcon />, path: '/estudante' },
         { text: 'Docente', icon: <SchoolIcon />, path: '/docente' },
-        { text: 'Produto', icon: <InventoryIcon />, path: '/produto' }
     ];
 
     return (
