@@ -60,7 +60,28 @@ function getAll($conn)
                 }
             }
         }
-        return array("usuario" => $usuario, "conta" => $dataConta);
+
+        $sqlRefeicao = "SELECT Refeicao.id, Refeicao.campus_ru, Prato.nome,
+        (SELECT GROUP_CONCAT(Ingrediente.nome SEPARATOR ', ')
+         FROM Prato
+         JOIN Composicao ON Prato.id = Composicao.id_prato
+         JOIN Ingrediente ON Composicao.id_ingrediente = Ingrediente.id
+         WHERE Prato.id = Refeicao.id_prato) AS ingredientes,
+        Prato.valor_nutricional, Refeicao.data
+        FROM Refeicao
+        INNER JOIN Prato ON Refeicao.id_prato = Prato.id
+        WHERE Refeicao.cpf_pagante = '$cpf' OR Refeicao.cpf_bolsista = '$cpf' OR Refeicao.cpf_docente = '$cpf'";
+
+        $resultRefeicao = $conn->query($sqlRefeicao);
+        $dataRefeicao = array();
+
+        if ($resultRefeicao->num_rows > 0) {
+            while ($row = $resultRefeicao->fetch_assoc()) {
+                $dataRefeicao[] = $row;
+            }
+        }
+
+        return array("usuario" => $usuario, "conta" => $dataConta,"refeicao" => $dataRefeicao);
     } else {
         $sql_cpf = "SELECT cpf FROM Estudante UNION SELECT cpf FROM Docente";
         $resultCpf = $conn->query($sql_cpf);
@@ -163,7 +184,6 @@ function insert($conn, $requestData)
             }
             $conn->autocommit(true);
         }
-        
     } else {
         $sqlMovimentacao = "INSERT INTO Movimentacao (id_conta, valor, tipo,`data`) VALUES ('$id_conta', '$valor', '$tipo','$data')";
         $resultMovimentacao = $conn->query($sqlMovimentacao);

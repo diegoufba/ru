@@ -328,5 +328,5 @@ export default function CrudTable(props) {
                 </Snackbar>
             )}
         </Box>
-    );
+    )
 }

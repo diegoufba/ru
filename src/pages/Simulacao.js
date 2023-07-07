@@ -38,6 +38,7 @@ export default function Simulacao(props) {
     const apiPath = 'http://localhost/ru/api/simulacao/'
 
     const [movimentacoes, setMovimentacoes] = useState([])
+    const [refeicoes, setRefeicoes] = useState([])
 
     const [dados, setDados] = useState({})
     const [cpfs, setCpfs] = useState([])
@@ -74,6 +75,8 @@ export default function Simulacao(props) {
                 setDados(jsonData.usuario)
                 setAvatarUrl(`${urlBaseAvatar}&seed=${jsonData.usuario.cpf}`)
                 setMovimentacoes(jsonData.conta)
+                setRefeicoes(jsonData.refeicao)
+                console.log(jsonData.refeicao)
             } else {
                 setCpfs(jsonData.cpfs)
                 setCampus(jsonData.campus)
@@ -182,6 +185,7 @@ export default function Simulacao(props) {
                     </Alert>}
 
             </Snackbar>
+            
             <Box sx={{ m: 1 }}>
                 <Typography color="primary" variant="h4" gutterBottom>
                     Conta
@@ -288,12 +292,16 @@ export default function Simulacao(props) {
                     : null}
 
             </Box>
-            {dados.id_conta ?
+            {dados.id_conta && movimentacoes.length > 0 ?
                 <Box>
                     <Toolbar />
-                    <BasicTable movimentacoes={movimentacoes} />
+                    <BasicTable linhas={movimentacoes} />
                 </Box> : null}
-
+            {refeicoes.length > 0 ?
+                <Box>
+                    <Toolbar />
+                    <BasicTable linhas={refeicoes} />
+                </Box> : null}
         </Container>
     );
 }

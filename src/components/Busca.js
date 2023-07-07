@@ -53,10 +53,10 @@ export default function Busca(props) {
         try {
             const parametrosComNome = attributeToCompareName ? { ...parametros, nome: nome, operador: operadorValue, [attributeToCompareName]: attributeToCompare } :
                 { ...parametros, nome: nome }
-            console.log(parametrosComNome)
+            // console.log(parametrosComNome)
             const queryParams = new URLSearchParams(parametrosComNome).toString();
             const apiPath = includeQueries ? `${baseApiPath}?${queryParams}` : baseApiPath;
-            console.log(apiPath)
+            // console.log(apiPath)
             const response = await fetch(apiPath)
             const jsonData = await response.json()
 

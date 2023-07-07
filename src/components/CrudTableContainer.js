@@ -25,9 +25,6 @@ function CrudTableContainer(props) {
       const columns = jsonData.length > 0 ? Object.keys(jsonData[0]) : []
       setcolumnNames(columns)
 
-      console.log(columns)
-      console.log(items)
-
     } catch (error) {
       console.error('Erro ao buscar dados:', error)
     }
@@ -40,13 +37,13 @@ function CrudTableContainer(props) {
           <Busca setRows={props.setRows} columnNames={columnNames} opcoes={props.opcoes} apiPath={props.apiPath} attributeToCompareName={props.attributeToCompareName} />
         </Box>
         <Box sx={{ boxShadow: 3, mt: 2 }}>
-          <CrudTable columnNames={columnNames} rows={props.rows} setRows={props.setRows} opcoes={props.opcoes} apiPath={props.apiPath} primaryKey={props.primaryKey} />;
+          <CrudTable columnNames={columnNames} rows={props.rows} setRows={props.setRows} opcoes={props.opcoes} apiPath={props.apiPath} primaryKey={props.primaryKey} />
         </Box>
       </>
     )
   }
   // Pode exibir um indicador de carregamento enquanto as colunas estão sendo carregadas
-  return <div>Loading...</div>;
+  return <div></div>
 }
 
 export default CrudTableContainer;
