@@ -70,7 +70,8 @@ function getAll($conn)
         Prato.valor_nutricional, Refeicao.data
         FROM Refeicao
         INNER JOIN Prato ON Refeicao.id_prato = Prato.id
-        WHERE Refeicao.cpf_pagante = '$cpf' OR Refeicao.cpf_bolsista = '$cpf' OR Refeicao.cpf_docente = '$cpf'";
+        WHERE Refeicao.cpf_pagante = '$cpf' OR Refeicao.cpf_bolsista = '$cpf' OR Refeicao.cpf_docente = '$cpf'
+        ORDER BY `data`";
 
         $resultRefeicao = $conn->query($sqlRefeicao);
         $dataRefeicao = array();

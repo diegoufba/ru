@@ -14,9 +14,9 @@ export default function BasicTable(props) {
   // const columns = ['id', 'tipo', 'valor', 'data']
   // console.log(columns)
   return (
-    <TableContainer component={Paper} elevation={3} sx={{ ml: 2, p: 2, borderRadius: '1rem' }}>
+    <TableContainer component={Paper} elevation={3} sx={{ p: 2, borderRadius: '1rem' }}>
       <Typography sx={{ mb: 2 }} variant="h5" gutterBottom>
-        Movimentações
+        {props.nome}
       </Typography>
       <Table aria-label="simple table">
         <TableHead>
