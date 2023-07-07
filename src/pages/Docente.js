@@ -5,9 +5,9 @@ import Page from '../components/Page';
 export default function Docente() {
     const title = 'Docente'
     const apiPath = 'http://localhost/ru/api/docente/'
-    const columnNames = ['cpf', 'nome', 'colegiado']
+    const columnNames = ['cpf', 'nome', 'colegiado','saldo']
     const primaryKey = 'cpf'
-    const attributeToCompareName = ''
+    const attributeToCompareName = 'saldo'
     const opcoes = {
         colegiado: ['Letras', 'Matemática', 'Computação', 'Ciências Sociais', 'Educação', 'Engenharia', 'Saúde', 'Administração',
             'Artes', 'Direito', 'Comunicação', 'Ciências Biológicas', 'Ciências Exatas']

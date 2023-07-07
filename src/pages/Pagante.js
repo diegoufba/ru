@@ -7,7 +7,7 @@ export default function Pagante() {
     const apiPath = 'http://localhost/ru/api/pagante/'
     const columnNames = ['cpf', 'nome', 'matricula','curso','saldo']
     const primaryKey = 'cpf'
-    const attributeToCompareName = ''
+    const attributeToCompareName = 'saldo'
     const opcoes = {
         curso: ['Letras', 'Matemática', 'Computação', 'Ciências Sociais', 'Educação', 'Engenharia', 'Saúde', 'Administração',
             'Artes', 'Direito', 'Comunicação', 'Ciências Biológicas', 'Ciências Exatas']
