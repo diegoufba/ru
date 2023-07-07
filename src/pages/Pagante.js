@@ -5,7 +5,7 @@ import Page from '../components/Page';
 export default function Pagante() {
     const title = 'Pagante'
     const apiPath = 'http://localhost/ru/api/pagante/'
-    const columnNames = ['cpf', 'nome', 'matricula','curso','saldo']
+    // const columnNames = ['cpf', 'nome', 'matricula','curso','saldo']
     const primaryKey = 'cpf'
     const attributeToCompareName = 'saldo'
     const opcoes = {
@@ -13,6 +13,6 @@ export default function Pagante() {
             'Artes', 'Direito', 'Comunicação', 'Ciências Biológicas', 'Ciências Exatas']
     };
     return (
-        <Page title={title} columnNames={columnNames} attributeToCompareName={attributeToCompareName} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} />
+        <Page title={title}  attributeToCompareName={attributeToCompareName} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} />
     );
 }

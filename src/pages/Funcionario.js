@@ -5,7 +5,7 @@ import Page from '../components/Page';
 export default function Funcionario() {
     const title = 'Funcionários' 
     const apiPath = 'http://localhost/ru/api/funcionario/'
-    const columnNames = ['cpf', 'nome', 'campus_ru', 'salario', 'turno', 'funcao']
+    // const columnNames = ['cpf', 'nome', 'campus_ru', 'salario', 'turno', 'funcao']
     const primaryKey = 'cpf'
     const attributeToCompareName = 'salario'
     const opcoes = {
@@ -14,6 +14,6 @@ export default function Funcionario() {
         funcao: ['Cozinheiro', 'Chef de cozinha', 'Nutricionista', 'Auxiliar de cozinha', 'Caixa', 'Auxiliar de limpeza', 'Gerente']
     }
     return (
-        <Page title={title} columnNames={columnNames} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} attributeToCompareName={attributeToCompareName}/>
+        <Page title={title} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey} attributeToCompareName={attributeToCompareName}/>
     );
 }

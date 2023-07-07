@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import CrudTable from './CrudTable';
+import React, { useState } from 'react';
+import CrudTableContainer from './CrudTableContainer';
 import Menu from './Menu';
 import Busca from './Busca';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+
+// import CrudTable from './CrudTable';
 
 
 //Falta: bloquear edicao da primary key
@@ -17,12 +19,7 @@ export default function Page(props) {
                 <Typography color="primary" variant="h4" gutterBottom>
                     {props.title}
                 </Typography>
-                <Box sx={{ boxShadow: 3, mt: 2, p:2,backgroundColor: 'white' }}>
-                    <Busca setRows={setRows} columnNames={props.columnNames} opcoes={props.opcoes} apiPath={props.apiPath} attributeToCompareName={props.attributeToCompareName}/>
-                </Box>
-                <Box sx={{ boxShadow: 3, mt: 2 }}>
-                    <CrudTable row={rows} setRows={setRows} columnNames={props.columnNames} opcoes={props.opcoes} apiPath={props.apiPath} primaryKey={props.primaryKey} />
-                </Box>
+                <CrudTableContainer rows={rows} columnNames={props.columnNames} setRows={setRows} opcoes={props.opcoes} apiPath={props.apiPath} primaryKey={props.primaryKey} />
             </Box>
         </Container>
     );

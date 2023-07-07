@@ -5,7 +5,7 @@ import Page from '../components/Page';
 export default function Bolsista() {
     const title = 'Bolsista' 
     const apiPath = 'http://localhost/ru/api/bolsista/'
-    const columnNames = ['cpf', 'nome', 'matricula', 'curso']
+    // const columnNames = ['cpf', 'nome', 'matricula', 'curso']
     const primaryKey = 'cpf'
     const attributeToCompareName = ''
     const opcoes = {
@@ -13,6 +13,6 @@ export default function Bolsista() {
             'Artes', 'Direito', 'Comunicação', 'Ciências Biológicas', 'Ciências Exatas']
     };
     return (
-        <Page title={title} columnNames={columnNames} attributeToCompareName={attributeToCompareName} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey}/>
+        <Page title={title}  attributeToCompareName={attributeToCompareName} opcoes={opcoes} apiPath={apiPath} primaryKey={primaryKey}/>
     );
 }

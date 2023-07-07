@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -51,7 +51,7 @@ export default function CrudTable(props) {
     const apiPath = props.apiPath
     const columnNames = props.columnNames
     const primaryKey = props.primaryKey
-    const rows = props.row
+    const rows = props.rows
     const setRows = props.setRows
 
     // const [rows, setRows] = useState([]);
@@ -126,23 +126,23 @@ export default function CrudTable(props) {
     })
     const [rowModesModel, setRowModesModel] = useState({});
 
-    useEffect(() => { fetchData(apiPath); }, [])
+    // useEffect(() => { fetchData(apiPath); }, [])
 
-    const fetchData = async (apiPath) => {
-        try {
-            const response = await fetch(apiPath)
-            const jsonData = await response.json()
+    // const fetchData = async (apiPath) => {
+    //     try {
+    //         const response = await fetch(apiPath)
+    //         const jsonData = await response.json()
 
-            const items = jsonData.map(item => ({
-                ...item,
-                internalId: randomId()
-            }))
-            setRows(items)
+    //         const items = jsonData.map(item => ({
+    //             ...item,
+    //             internalId: randomId()
+    //         }))
+    //         setRows(items)
 
-        } catch (error) {
-            console.error('Erro ao buscar dados:', error)
-        }
-    }
+    //     } catch (error) {
+    //         console.error('Erro ao buscar dados:', error)
+    //     }
+    // }
 
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
