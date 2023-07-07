@@ -4,12 +4,15 @@ function busca($conn)
 {
     // Obtém os parâmetros da requisição GET
     $curso = isset($_GET['curso']) ? $_GET['curso'] : 'Todos';
-    
+
     $nome = isset($_GET['nome']) ? $_GET['nome'] : '';
 
     // Constrói a consulta SQL inicial
-    $sql = "SELECT * FROM Estudante
-        WHERE 1=1";
+
+    $sql = "SELECT Estudante.cpf,Estudante.nome,Estudante.matricula,Estudante.curso
+    FROM Estudante 
+    INNER JOIN Bolsista ON Estudante.cpf = Bolsista.cpf
+    WHERE 1=1";
 
     // Verifica se o parâmetro nome está presente
     if ($nome != '') {
