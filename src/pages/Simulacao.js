@@ -79,8 +79,8 @@ export default function Simulacao(props) {
                 setCampus(jsonData.campus)
                 setPratos(jsonData.pratos)
 
-                setCpf(jsonData.cpfs[1])
-                fetchData(apiPath, jsonData.cpfs[1])
+                setCpf(jsonData.cpfs[0])
+                fetchData(apiPath, jsonData.cpfs[0])
 
             }
         } catch (error) {
