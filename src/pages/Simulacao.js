@@ -13,6 +13,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -20,6 +25,12 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 
 export default function Simulacao(props) {
+
+    const [value, setValue] = React.useState('1');
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     const [open, setOpen] = React.useState(false);
     const [recargaSucess, setRecargaSucess] = useState(false)
@@ -38,6 +49,7 @@ export default function Simulacao(props) {
     const apiPath = 'http://localhost/ru/api/simulacao/'
 
     const [movimentacoes, setMovimentacoes] = useState([])
+    const [refeicoes, setRefeicoes] = useState([])
 
     const [dados, setDados] = useState({})
     const [cpfs, setCpfs] = useState([])
@@ -74,6 +86,7 @@ export default function Simulacao(props) {
                 setDados(jsonData.usuario)
                 setAvatarUrl(`${urlBaseAvatar}&seed=${jsonData.usuario.cpf}`)
                 setMovimentacoes(jsonData.conta)
+                setRefeicoes(jsonData.refeicao)
             } else {
                 setCpfs(jsonData.cpfs)
                 setCampus(jsonData.campus)
@@ -180,120 +193,134 @@ export default function Simulacao(props) {
                     <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
                         Falha na Operacão
                     </Alert>}
-
             </Snackbar>
+
             <Box sx={{ m: 1 }}>
                 <Typography color="primary" variant="h4" gutterBottom>
                     Conta
                 </Typography>
 
-                <Paper elevation={3} sx={{ mt: 2, p: 2, borderRadius: '1rem', width: '380px' }}>
-                    <TextField
-                        sx={{ minWidth: 'calc(6em + 20px)', mr: 2 }}
-                        id="outlined-select-cpf"
-                        select
-                        label="cpf"
-                        value={cpf}
-                        onChange={handleCpfChange}
-                        variant='standard'
-                    >
-                        {cpfs.map((cpf) => (
-                            <MenuItem key={cpf} value={cpf}>
-                                {cpf}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    <Box sx={{ display: 'flex', mt: 3 }}>
-                        {dados.nome ? <img src={avatarUrl} alt="Avatar" /> : null}
-                        <Box sx={{ mt: 2, ml: 2 }}>
-                            {dados.nome ? <Typography variant="body1" gutterBottom>
-                                <span style={{ fontWeight: 'bold' }}>Nome: </span>
-                                {dados.nome}
-                            </Typography> : null}
-                            {dados.tipo ? <Typography variant="body1" gutterBottom>
-                                <span style={{ fontWeight: 'bold' }}>Tipo: </span>
-                                {dados.tipo}
-                            </Typography> : null}
-                            {dados.saldo ? <Typography variant="body1" gutterBottom>
-                                <span style={{ fontWeight: 'bold' }}>Saldo: </span>
-                                <span style={{ color: '#3f51b5' }}>R$ {dados.saldo}</span>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                    <Paper elevation={3} sx={{ mt: 2, p: 2, borderRadius: '1rem', width: '380px' }}>
+                        <TextField
+                            sx={{ minWidth: 'calc(6em + 20px)', mr: 2 }}
+                            id="outlined-select-cpf"
+                            select
+                            label="cpf"
+                            value={cpf}
+                            onChange={handleCpfChange}
+                            variant='standard'
+                        >
+                            {cpfs.map((cpf) => (
+                                <MenuItem key={cpf} value={cpf}>
+                                    {cpf}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                        <Box sx={{ display: 'flex', mt: 3 }}>
+                            {dados.nome ? <img src={avatarUrl} alt="Avatar" /> : null}
+                            <Box sx={{ mt: 2, ml: 2 }}>
+                                {dados.nome ? <Typography variant="body1" gutterBottom>
+                                    <span style={{ fontWeight: 'bold' }}>Nome: </span>
+                                    {dados.nome}
+                                </Typography> : null}
+                                {dados.tipo ? <Typography variant="body1" gutterBottom>
+                                    <span style={{ fontWeight: 'bold' }}>Tipo: </span>
+                                    {dados.tipo}
+                                </Typography> : null}
+                                {dados.saldo ? <Typography variant="body1" gutterBottom>
+                                    <span style={{ fontWeight: 'bold' }}>Saldo: </span>
+                                    <span style={{ color: '#3f51b5' }}>R$ {dados.saldo}</span>
 
-                            </Typography> : null}
+                                </Typography> : null}
+                            </Box>
                         </Box>
-                    </Box>
-                </Paper>
-                {cpf ?
-                    <Box sx={{ display: 'flex' }}>
+                    </Paper>
 
-                        <Paper elevation={3} sx={{ mt: 2, p: 2, borderRadius: '1rem' }}>
-                            <Typography sx={{ mb: 2 }} variant="h5" gutterBottom>
-                                Almoçar
-                            </Typography>
-                            <TextField
-                                sx={{ minWidth: 'calc(8em + 20px)' }}
-                                id="outlined-select-prato"
-                                select
-                                label="prato"
-                                value={prato_id}
-                                onChange={handlePrato_idChange}
-                                variant='standard'
-                            >
-                                {pratos.map((prato) => (
-                                    <MenuItem key={prato.nome} value={prato.id}>
-                                        {`${prato.nome} (${prato.valor_nutricional} kcal)`}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                            <br />
-                            <TextField
-                                sx={{ minWidth: 'calc(8em + 20px)', mt: 2 }}
-                                id="outlined-select-campus"
-                                select
-                                label="campus_ru"
-                                value={campus_ru}
-                                onChange={handleCampus_ruChange}
-                                variant='standard'
-                            >
-                                {campus.map((cam) => (
-                                    <MenuItem key={cam} value={cam}>
-                                        {cam}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                            <br />
-                            <Button onClick={handleAlmocarButton} sx={{ mt: 2, width: '100%' }} disabled={cpf && campus_ru && prato_id ? false : true} variant="contained">Almoçar</Button>
-                        </Paper>
-                        {dados.tipo !== 'Bolsista' ?
+                    {cpf ?
+                        <>
+                            {dados.tipo !== 'Bolsista' ?
+                                <Paper elevation={3} sx={{ mt: 2, ml: 2, p: 2, borderRadius: '1rem' }}>
+                                    <Typography sx={{ mb: 6 }} variant="h5" gutterBottom>
+                                        Adicionar Credito
+                                    </Typography>
+                                    <Grid
+                                        container
+                                        spacing={2}
+                                        direction="column"
+
+                                        alignItems="center">
+                                        <Grid item>
+                                            <Button onClick={() => handleRecargaButton(5)} sx={{ width: '4.5rem', mr: 2 }} variant="outlined">R$ 5</Button>
+                                            <Button onClick={() => handleRecargaButton(10)} sx={{ width: '4.5rem' }} variant="outlined">R$ 10</Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button onClick={() => handleRecargaButton(20)} sx={{ width: '4.5rem', mr: 2 }} variant="outlined">R$ 20</Button>
+                                            <Button onClick={() => handleRecargaButton(50)} sx={{ width: '4.5rem' }} variant="outlined">R$ 50</Button>
+                                        </Grid>
+                                    </Grid>
+                                </Paper> : null}
                             <Paper elevation={3} sx={{ mt: 2, ml: 2, p: 2, borderRadius: '1rem' }}>
-                                <Typography sx={{ mb: 6 }} variant="h5" gutterBottom>
-                                    Adicionar Credito
+                                <Typography sx={{ mb: 2 }} variant="h5" gutterBottom>
+                                    Almoçar
                                 </Typography>
-                                <Grid
-                                    container
-                                    spacing={2}
-                                    direction="column"
+                                <TextField
+                                    sx={{ minWidth: 'calc(8em + 20px)' }}
+                                    id="outlined-select-prato"
+                                    select
+                                    label="prato"
+                                    value={prato_id}
+                                    onChange={handlePrato_idChange}
+                                    variant='standard'
+                                >
+                                    {pratos.map((prato) => (
+                                        <MenuItem key={prato.nome} value={prato.id}>
+                                            {`${prato.nome} (${prato.valor_nutricional} kcal)`}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                                <br />
+                                <TextField
+                                    sx={{ minWidth: 'calc(8em + 20px)', mt: 2 }}
+                                    id="outlined-select-campus"
+                                    select
+                                    label="campus_ru"
+                                    value={campus_ru}
+                                    onChange={handleCampus_ruChange}
+                                    variant='standard'
+                                >
+                                    {campus.map((cam) => (
+                                        <MenuItem key={cam} value={cam}>
+                                            {cam}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                                <br />
+                                <Button onClick={handleAlmocarButton} sx={{ mt: 2, width: '100%' }} disabled={cpf && campus_ru && prato_id ? false : true} variant="contained">Almoçar</Button>
+                            </Paper>
 
-                                    alignItems="center">
-                                    <Grid item>
-                                        <Button onClick={() => handleRecargaButton(5)} sx={{ width: '4.5rem', mr: 2 }} variant="outlined">R$ 5</Button>
-                                        <Button onClick={() => handleRecargaButton(10)} sx={{ width: '4.5rem' }} variant="outlined">R$ 10</Button>
-                                    </Grid>
-                                    <Grid item>
-                                        <Button onClick={() => handleRecargaButton(20)} sx={{ width: '4.5rem', mr: 2 }} variant="outlined">R$ 20</Button>
-                                        <Button onClick={() => handleRecargaButton(50)} sx={{ width: '4.5rem' }} variant="outlined">R$ 50</Button>
-                                    </Grid>
-                                </Grid>
-                            </Paper> : null}
+                        </>
+                        : null}
+                </Box>
+
+                <TabContext value={value}>
+                    <Box sx={{ borderColor: 'divider', mt: 3, mb: 1 }}>
+                        <TabList sx={{ p: 0 }} onChange={handleChange} aria-label="lab API tabs example">
+                            <Tab label="Refeições" value="1" />
+                            {dados.id_conta ? <Tab label="Movimentações" value="2" /> : null}
+                        </TabList>
                     </Box>
-                    : null}
+                    <TabPanel sx={{ p: 0 }} value="1">
+                        {refeicoes.length > 0 ?
+                            <BasicTable linhas={refeicoes} nome='Refeições' /> : null}
+                    </TabPanel>
+                    <TabPanel sx={{ p: 0 }} value="2">
+                        {dados.id_conta && movimentacoes.length > 0 ?
+                            <BasicTable linhas={movimentacoes} nome='Movimentações' /> : null}
+                    </TabPanel>
+                </TabContext>
 
             </Box>
-            {dados.id_conta ?
-                <Box>
-                    <Toolbar />
-                    <BasicTable movimentacoes={movimentacoes} />
-                </Box> : null}
-
         </Container>
     );
 }
