@@ -23,7 +23,7 @@ export default function Menu() {
         { text: 'Simulacão', icon: <RestaurantIcon />, path: '/' },
         { text: 'Movimentação', icon: <CurrencyExchangeIcon />, path: '/movimentacao' },
         { text: 'Funcionário', icon: <GroupsIcon />, path: '/funcionario' },
-        { text: 'Estudante', icon: <FaceIcon />, path: '/estudante' },
+        { text: 'Bolsista', icon: <FaceIcon />, path: '/bolsista' },
         { text: 'Docente', icon: <SchoolIcon />, path: '/docente' },
         { text: 'Pagante', icon: <LocalAtmIcon />, path: '/pagante' },
     ];
